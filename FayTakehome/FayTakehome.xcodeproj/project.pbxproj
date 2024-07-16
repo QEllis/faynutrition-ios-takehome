@@ -15,6 +15,11 @@
 		3C0E39CD2C45BD5F0077E0D6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3C0E39CC2C45BD5F0077E0D6 /* Main.storyboard */; };
 		3C0E39D02C45CDA60077E0D6 /* UITextField+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C0E39CF2C45CDA60077E0D6 /* UITextField+Extensions.swift */; };
 		3C0E39D22C45D1320077E0D6 /* Notification+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C0E39D12C45D1320077E0D6 /* Notification+Extensions.swift */; };
+		3C0E39D52C45D41F0077E0D6 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C0E39D42C45D41F0077E0D6 /* Server.swift */; };
+		3C0E39D72C45E96A0077E0D6 /* AppointmentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C0E39D62C45E96A0077E0D6 /* AppointmentsViewController.swift */; };
+		3C0E39DD2C45EED90077E0D6 /* AppointmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C0E39DC2C45EED90077E0D6 /* AppointmentCell.swift */; };
+		3C0E39E12C45F4C10077E0D6 /* ReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C0E39E02C45F4C10077E0D6 /* ReusableView.swift */; };
+		3C0E39E32C4603430077E0D6 /* MonthDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C0E39E22C4603430077E0D6 /* MonthDayView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +33,11 @@
 		3C0E39CC2C45BD5F0077E0D6 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		3C0E39CF2C45CDA60077E0D6 /* UITextField+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+Extensions.swift"; sourceTree = "<group>"; };
 		3C0E39D12C45D1320077E0D6 /* Notification+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notification+Extensions.swift"; sourceTree = "<group>"; };
+		3C0E39D42C45D41F0077E0D6 /* Server.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Server.swift; sourceTree = "<group>"; };
+		3C0E39D62C45E96A0077E0D6 /* AppointmentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppointmentsViewController.swift; sourceTree = "<group>"; };
+		3C0E39DC2C45EED90077E0D6 /* AppointmentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppointmentCell.swift; sourceTree = "<group>"; };
+		3C0E39E02C45F4C10077E0D6 /* ReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableView.swift; sourceTree = "<group>"; };
+		3C0E39E22C4603430077E0D6 /* MonthDayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthDayView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,10 +70,11 @@
 		3C0E39B72C45BBD80077E0D6 /* FayTakehome */ = {
 			isa = PBXGroup;
 			children = (
+				3C0E39D82C45EE520077E0D6 /* Views */,
+				3C0E39D32C45D4150077E0D6 /* Server */,
 				3C0E39CE2C45CD990077E0D6 /* Extensions */,
 				3C0E39B82C45BBD80077E0D6 /* AppDelegate.swift */,
 				3C0E39BA2C45BBD80077E0D6 /* SceneDelegate.swift */,
-				3C0E39BC2C45BBD80077E0D6 /* LoginViewController.swift */,
 				3C0E39C12C45BBD90077E0D6 /* Assets.xcassets */,
 				3C0E39C32C45BBD90077E0D6 /* LaunchScreen.storyboard */,
 				3C0E39C62C45BBD90077E0D6 /* Info.plist */,
@@ -79,6 +90,42 @@
 				3C0E39D12C45D1320077E0D6 /* Notification+Extensions.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		3C0E39D32C45D4150077E0D6 /* Server */ = {
+			isa = PBXGroup;
+			children = (
+				3C0E39D42C45D41F0077E0D6 /* Server.swift */,
+			);
+			path = Server;
+			sourceTree = "<group>";
+		};
+		3C0E39D82C45EE520077E0D6 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				3C0E39DB2C45EEBD0077E0D6 /* Cells */,
+				3C0E39DA2C45EEB70077E0D6 /* ViewControllers */,
+				3C0E39E02C45F4C10077E0D6 /* ReusableView.swift */,
+				3C0E39E22C4603430077E0D6 /* MonthDayView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		3C0E39DA2C45EEB70077E0D6 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				3C0E39BC2C45BBD80077E0D6 /* LoginViewController.swift */,
+				3C0E39D62C45E96A0077E0D6 /* AppointmentsViewController.swift */,
+			);
+			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		3C0E39DB2C45EEBD0077E0D6 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				3C0E39DC2C45EED90077E0D6 /* AppointmentCell.swift */,
+			);
+			path = Cells;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -152,11 +199,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3C0E39E32C4603430077E0D6 /* MonthDayView.swift in Sources */,
+				3C0E39E12C45F4C10077E0D6 /* ReusableView.swift in Sources */,
 				3C0E39BD2C45BBD80077E0D6 /* LoginViewController.swift in Sources */,
 				3C0E39D22C45D1320077E0D6 /* Notification+Extensions.swift in Sources */,
+				3C0E39D72C45E96A0077E0D6 /* AppointmentsViewController.swift in Sources */,
 				3C0E39D02C45CDA60077E0D6 /* UITextField+Extensions.swift in Sources */,
 				3C0E39B92C45BBD80077E0D6 /* AppDelegate.swift in Sources */,
+				3C0E39D52C45D41F0077E0D6 /* Server.swift in Sources */,
 				3C0E39BB2C45BBD80077E0D6 /* SceneDelegate.swift in Sources */,
+				3C0E39DD2C45EED90077E0D6 /* AppointmentCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

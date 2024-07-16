@@ -31,6 +31,7 @@ class LoginViewController: UIViewController {
     private lazy var usernameTextField: UITextField = {
         let tf = UITextField()
         tf.translatesAutoresizingMaskIntoConstraints = false
+        tf.delegate = self
         tf.placeholder = "Username"
         tf.textColor = .black
         tf.font = UIFont.systemFont(ofSize: 15, weight: .medium)
@@ -40,9 +41,11 @@ class LoginViewController: UIViewController {
     private lazy var passwordTextField: UITextField = {
         let tf = UITextField()
         tf.translatesAutoresizingMaskIntoConstraints = false
+        tf.delegate = self
         tf.placeholder = "Password"
         tf.textColor = .black
         tf.font = UIFont.systemFont(ofSize: 15, weight: .medium)
+        tf.isSecureTextEntry = true
         return tf
     }()
 
@@ -56,6 +59,7 @@ class LoginViewController: UIViewController {
         btn.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .medium)
         btn.isUserInteractionEnabled = false
         btn.alpha = 0.5
+        btn.addTarget(self, action: #selector(loginPressed), for: .touchUpInside)
         return btn
     }()
 
@@ -100,7 +104,8 @@ class LoginViewController: UIViewController {
         NSLayoutConstraint.activate([
             logoImv.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             logoImv.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 48),
-            logoImv.heightAnchor.constraint(equalToConstant: 64)
+            logoImv.heightAnchor.constraint(equalToConstant: 64),
+            logoImv.widthAnchor.constraint(equalTo: logoImv.heightAnchor, multiplier: 2.87)
         ])
 
         NSLayoutConstraint.activate([
@@ -168,6 +173,49 @@ class LoginViewController: UIViewController {
     @objc private func backgroundTapped() {
         usernameTextField.resignFirstResponder()
         passwordTextField.resignFirstResponder()
+    }
+
+    @objc private func loginPressed() {
+        // qe - testing automatically login
+        Server.shared.login(username: "john", password: "12345", completion: { [weak self] success, error in
+            DispatchQueue.main.async {
+                if success {
+                    self?.enterApp()
+                }
+            }
+        })
+        return
+
+        guard let username = usernameTextField.text, let password = passwordTextField.text else { return }
+        Server.shared.login(username: username, password: password, completion: { [weak self] success, error in
+            DispatchQueue.main.async {
+                if success {
+                    self?.enterApp()
+                } else {
+                    // Display error
+                }
+            }
+        })
+    }
+
+    private func enterApp() {
+        let vc = AppointmentsViewController()
+        UIApplication.shared.windows.first?.rootViewController = vc
+        UIApplication.shared.windows.first?.makeKeyAndVisible()
+    }
+
+}
+
+// MARK: - UITextFieldDelegate
+
+extension LoginViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField === usernameTextField {
+            passwordTextField.becomeFirstResponder()
+        } else {
+            textField.resignFirstResponder()
+        }
+        return false
     }
 
 }
