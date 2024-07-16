@@ -16,7 +16,7 @@ final class AppointmentCell: UICollectionViewCell, ReusableView {
         let sv = UIStackView(arrangedSubviews: [topContentStackView, zoomButton])
         sv.translatesAutoresizingMaskIntoConstraints = false
         sv.axis = .vertical
-        sv.spacing = 8
+        sv.spacing = 16
         sv.alignment = .leading
         sv.distribution = .fill
         sv.setContentHuggingPriority(.required, for: .vertical)
@@ -27,7 +27,7 @@ final class AppointmentCell: UICollectionViewCell, ReusableView {
         let sv = UIStackView(arrangedSubviews: [monthDayView, labelsStackView])
         sv.translatesAutoresizingMaskIntoConstraints = false
         sv.axis = .horizontal
-        sv.spacing = 8
+        sv.spacing = 16
         sv.alignment = .leading
         sv.distribution = .fill
         sv.setContentHuggingPriority(.required, for: .vertical)
@@ -38,7 +38,7 @@ final class AppointmentCell: UICollectionViewCell, ReusableView {
         let sv = UIStackView(arrangedSubviews: [titleLabel, timeRangeLabel, repeatingLabel])
         sv.translatesAutoresizingMaskIntoConstraints = false
         sv.axis = .vertical
-        sv.spacing = 2
+        sv.spacing = 4
         sv.alignment = .leading
         sv.distribution = .fill
         sv.setContentHuggingPriority(.required, for: .vertical)
@@ -121,7 +121,6 @@ final class AppointmentCell: UICollectionViewCell, ReusableView {
         contentView.layer.borderColor = UIColor.black.withAlphaComponent(0.1).cgColor
         
         contentView.addSubview(contentStackView)
-//        contentView.addSubview(monthDayView)
 
         NSLayoutConstraint.activate([
             contentStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 16),
@@ -136,17 +135,19 @@ final class AppointmentCell: UICollectionViewCell, ReusableView {
         ])
 
         NSLayoutConstraint.activate([
-//            monthDayView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-//            monthDayView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
             monthDayView.widthAnchor.constraint(equalToConstant: 48)
-//            monthDayView.heightAnchor.constraint(equalTo: monthDayView.widthAnchor)
         ])
     }
 
     public func fillOut(with appointment: Appointment, isSelected: Bool = false) {
         titleLabel.text = "\(appointment.appointment_type) with \(appointment.dietitianName)"
         timeRangeLabel.text = appointment.timeRangeString
-        repeatingLabel.text = appointment.recurrence_type
+
+        if let image = UIImage(systemName: "calendar") {
+            repeatingLabel.attributedText = AttributedStringUtils.createAttributedString(with: image, and: appointment.recurrence_type)
+        } else {
+            repeatingLabel.attributedText = NSAttributedString(string: appointment.recurrence_type)
+        }
         zoomButton.isHidden = !isSelected
         monthDayView.fillOut(with: appointment.start)
         contentView.layoutIfNeeded()

@@ -20,6 +20,8 @@
 		3C0E39DD2C45EED90077E0D6 /* AppointmentCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C0E39DC2C45EED90077E0D6 /* AppointmentCell.swift */; };
 		3C0E39E12C45F4C10077E0D6 /* ReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C0E39E02C45F4C10077E0D6 /* ReusableView.swift */; };
 		3C0E39E32C4603430077E0D6 /* MonthDayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C0E39E22C4603430077E0D6 /* MonthDayView.swift */; };
+		3C0E39E52C4608E90077E0D6 /* AttributedStringHelpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C0E39E42C4608E90077E0D6 /* AttributedStringHelpers.swift */; };
+		3C0E39E92C460A810077E0D6 /* PageControlButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C0E39E82C460A810077E0D6 /* PageControlButtonView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +40,8 @@
 		3C0E39DC2C45EED90077E0D6 /* AppointmentCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppointmentCell.swift; sourceTree = "<group>"; };
 		3C0E39E02C45F4C10077E0D6 /* ReusableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusableView.swift; sourceTree = "<group>"; };
 		3C0E39E22C4603430077E0D6 /* MonthDayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthDayView.swift; sourceTree = "<group>"; };
+		3C0E39E42C4608E90077E0D6 /* AttributedStringHelpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttributedStringHelpers.swift; sourceTree = "<group>"; };
+		3C0E39E82C460A810077E0D6 /* PageControlButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PageControlButtonView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -70,7 +74,8 @@
 		3C0E39B72C45BBD80077E0D6 /* FayTakehome */ = {
 			isa = PBXGroup;
 			children = (
-				3C0E39D82C45EE520077E0D6 /* Views */,
+				3C0E39E62C460A2D0077E0D6 /* Utils */,
+				3C0E39D82C45EE520077E0D6 /* UI */,
 				3C0E39D32C45D4150077E0D6 /* Server */,
 				3C0E39CE2C45CD990077E0D6 /* Extensions */,
 				3C0E39B82C45BBD80077E0D6 /* AppDelegate.swift */,
@@ -100,15 +105,14 @@
 			path = Server;
 			sourceTree = "<group>";
 		};
-		3C0E39D82C45EE520077E0D6 /* Views */ = {
+		3C0E39D82C45EE520077E0D6 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				3C0E39E72C460A510077E0D6 /* View */,
 				3C0E39DB2C45EEBD0077E0D6 /* Cells */,
 				3C0E39DA2C45EEB70077E0D6 /* ViewControllers */,
-				3C0E39E02C45F4C10077E0D6 /* ReusableView.swift */,
-				3C0E39E22C4603430077E0D6 /* MonthDayView.swift */,
 			);
-			path = Views;
+			path = UI;
 			sourceTree = "<group>";
 		};
 		3C0E39DA2C45EEB70077E0D6 /* ViewControllers */ = {
@@ -126,6 +130,24 @@
 				3C0E39DC2C45EED90077E0D6 /* AppointmentCell.swift */,
 			);
 			path = Cells;
+			sourceTree = "<group>";
+		};
+		3C0E39E62C460A2D0077E0D6 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				3C0E39E02C45F4C10077E0D6 /* ReusableView.swift */,
+				3C0E39E42C4608E90077E0D6 /* AttributedStringHelpers.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
+		3C0E39E72C460A510077E0D6 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				3C0E39E22C4603430077E0D6 /* MonthDayView.swift */,
+				3C0E39E82C460A810077E0D6 /* PageControlButtonView.swift */,
+			);
+			path = View;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -209,6 +231,8 @@
 				3C0E39D52C45D41F0077E0D6 /* Server.swift in Sources */,
 				3C0E39BB2C45BBD80077E0D6 /* SceneDelegate.swift in Sources */,
 				3C0E39DD2C45EED90077E0D6 /* AppointmentCell.swift in Sources */,
+				3C0E39E52C4608E90077E0D6 /* AttributedStringHelpers.swift in Sources */,
+				3C0E39E92C460A810077E0D6 /* PageControlButtonView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

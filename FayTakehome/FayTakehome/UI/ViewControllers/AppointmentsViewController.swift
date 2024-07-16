@@ -40,6 +40,30 @@ final class AppointmentsViewController: UIViewController {
         return label
     }()
 
+    private lazy var modeControlStackView: UIStackView = {
+        let sv = UIStackView(arrangedSubviews: [upcomingModeButton, pastModeButton])
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        sv.axis = .horizontal
+        sv.spacing = 0
+        sv.alignment = .leading
+        sv.distribution = .fillEqually
+        return sv
+    }()
+
+    private lazy var upcomingModeButton: PageControlButtonView = {
+        let view = PageControlButtonView(title: "Upcoming")
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.button.addTarget(self, action: #selector(upcomingModePressed), for: .touchUpInside)
+        return view
+    }()
+
+    private lazy var pastModeButton: PageControlButtonView = {
+        let view = PageControlButtonView(title: "Past")
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.button.addTarget(self, action: #selector(pastModePressed), for: .touchUpInside)
+        return view
+    }()
+
     private lazy var collectionView: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collectionViewLayout)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -81,6 +105,7 @@ final class AppointmentsViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         setupDataSource()
+        setupSubscribers()
         fetchAppointments()
     }
 
@@ -89,6 +114,7 @@ final class AppointmentsViewController: UIViewController {
         view.addSubview(logoImv)
         view.addSubview(topDividerLine)
         view.addSubview(titleLabel)
+        view.addSubview(modeControlStackView)
         view.addSubview(collectionView)
 
         NSLayoutConstraint.activate([
@@ -111,7 +137,14 @@ final class AppointmentsViewController: UIViewController {
         ])
 
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16),
+            modeControlStackView.heightAnchor.constraint(equalToConstant: 48),
+            modeControlStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            modeControlStackView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 16)
+        ])
+        upcomingModeButton.widthAnchor.constraint(equalToConstant: 80).isActive = true
+
+        NSLayoutConstraint.activate([
+            collectionView.topAnchor.constraint(equalTo: modeControlStackView.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
@@ -133,12 +166,19 @@ final class AppointmentsViewController: UIViewController {
                 let appointmentsToShow: [Appointment] = (modeAndSelected.0 == .upcoming) ? upcoming : past
                 var snapshot = NSDiffableDataSourceSnapshot<Int, AppointmentCellData>()
                 snapshot.appendSections([0])
-                var data: [AppointmentCellData] = appointmentsToShow.map({ AppointmentCellData(appointment: $0, isSelected: $0 == modeAndSelected.1) })
+                let data: [AppointmentCellData] = appointmentsToShow.map({ AppointmentCellData(appointment: $0, isSelected: $0 == modeAndSelected.1) })
                 snapshot.appendItems(data, toSection: 0)
                 UIView.performWithoutAnimation({
                     self.dataSource?.apply(snapshot, animatingDifferences: true)
                 })
             }).store(in: &subscribers)
+    }
+
+    private func setupSubscribers() {
+        $viewingMode.removeDuplicates().sink(receiveValue: { [weak self] currentMode in
+            self?.upcomingModeButton.setSelected(currentMode == .upcoming)
+            self?.pastModeButton.setSelected(currentMode == .past)
+        }).store(in: &subscribers)
     }
 
     private func cellProvider(collectionView: UICollectionView, indexPath: IndexPath, appointmentData: AppointmentCellData) -> UICollectionViewCell? {
@@ -172,12 +212,19 @@ final class AppointmentsViewController: UIViewController {
             let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
             let thisSection = NSCollectionLayoutSection(group: group)
             thisSection.interGroupSpacing = 16
-            thisSection.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 20, bottom: 20, trailing: 20)
+            thisSection.contentInsets = NSDirectionalEdgeInsets(top: 8, leading: 20, bottom: 20, trailing: 20)
             return thisSection
         }, configuration: configuration)
         return layout
     }
 
+    @objc private func upcomingModePressed() {
+        viewingMode = .upcoming
+    }
+
+    @objc private func pastModePressed() {
+        viewingMode = .past
+    }
 }
 
 // MARK: - UICollectionViewDelegate

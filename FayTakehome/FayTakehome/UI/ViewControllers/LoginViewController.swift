@@ -177,14 +177,14 @@ class LoginViewController: UIViewController {
 
     @objc private func loginPressed() {
         // qe - testing automatically login
-        Server.shared.login(username: "john", password: "12345", completion: { [weak self] success, error in
-            DispatchQueue.main.async {
-                if success {
-                    self?.enterApp()
-                }
-            }
-        })
-        return
+//        Server.shared.login(username: "john", password: "12345", completion: { [weak self] success, error in
+//            DispatchQueue.main.async {
+//                if success {
+//                    self?.enterApp()
+//                }
+//            }
+//        })
+//        return
 
         guard let username = usernameTextField.text, let password = passwordTextField.text else { return }
         Server.shared.login(username: username, password: password, completion: { [weak self] success, error in
