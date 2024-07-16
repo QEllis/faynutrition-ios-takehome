@@ -75,6 +75,14 @@ final class AppointmentsViewController: UIViewController {
     }()
     private lazy var collectionViewLayout: UICollectionViewCompositionalLayout = { return createLayout() }()
 
+    private lazy var loadingIndicator: UIActivityIndicatorView = {
+        let ind = UIActivityIndicatorView(style: .large)
+        ind.translatesAutoresizingMaskIntoConstraints = false
+        ind.color = .systemBlue
+        ind.hidesWhenStopped = true
+        return ind
+    }()
+
     // MARK: - Properties
 
     enum ViewingMode {
@@ -88,6 +96,8 @@ final class AppointmentsViewController: UIViewController {
     @Published private var upcomingAppointments: [Appointment] = []
     @Published private var pastAppointments: [Appointment] = []
     @Published private var selectedAppointment: Appointment?
+
+    private let feedbackGenerator = UIImpactFeedbackGenerator(style: .soft)
 
     // MARK: - Init
 
@@ -107,6 +117,7 @@ final class AppointmentsViewController: UIViewController {
         setupDataSource()
         setupSubscribers()
         fetchAppointments()
+        feedbackGenerator.prepare()
     }
 
     private func setupUI() {
@@ -116,6 +127,7 @@ final class AppointmentsViewController: UIViewController {
         view.addSubview(titleLabel)
         view.addSubview(modeControlStackView)
         view.addSubview(collectionView)
+        view.addSubview(loadingIndicator)
 
         NSLayoutConstraint.activate([
             logoImv.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
@@ -148,6 +160,11 @@ final class AppointmentsViewController: UIViewController {
             collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ])
+
+        NSLayoutConstraint.activate([
+            loadingIndicator.centerXAnchor.constraint(equalTo: collectionView.centerXAnchor),
+            loadingIndicator.centerYAnchor.constraint(equalTo: collectionView.centerYAnchor)
         ])
     }
 
@@ -193,10 +210,20 @@ final class AppointmentsViewController: UIViewController {
         return cell
     }
 
+    private func startLoading() {
+        loadingIndicator.startAnimating()
+    }
+
+    private func stopLoading() {
+        loadingIndicator.stopAnimating()
+    }
+
     private func fetchAppointments() {
+        startLoading()
         Server.shared.fetchAppointments(completion: { [weak self] appointments, error in
             DispatchQueue.main.async {
                 guard let self else { return }
+                self.stopLoading()
                 self.upcomingAppointments = appointments.filter({ $0.isUpcoming })
                 self.pastAppointments = appointments.filter({ !$0.isUpcoming })
             }
@@ -232,6 +259,9 @@ final class AppointmentsViewController: UIViewController {
 extension AppointmentsViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         guard let snapshot = dataSource?.snapshot(), snapshot.numberOfItems(inSection: 0) > indexPath.item else { return }
+
+        feedbackGenerator.impactOccurred()
+
         let selectedAppointment = snapshot.itemIdentifiers(inSection: 0)[indexPath.item]
         if self.selectedAppointment == selectedAppointment.appointment {
             self.selectedAppointment = nil // Deselect currently selected

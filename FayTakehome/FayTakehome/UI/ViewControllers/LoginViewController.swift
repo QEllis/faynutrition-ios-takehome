@@ -32,9 +32,12 @@ class LoginViewController: UIViewController {
         let tf = UITextField()
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.delegate = self
-        tf.placeholder = "Username"
         tf.textColor = .black
         tf.font = UIFont.systemFont(ofSize: 15, weight: .medium)
+        tf.attributedPlaceholder = NSAttributedString(
+            string: "Username",
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray]
+        )
         return tf
     }()
 
@@ -42,10 +45,13 @@ class LoginViewController: UIViewController {
         let tf = UITextField()
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.delegate = self
-        tf.placeholder = "Password"
         tf.textColor = .black
         tf.font = UIFont.systemFont(ofSize: 15, weight: .medium)
         tf.isSecureTextEntry = true
+        tf.attributedPlaceholder = NSAttributedString(
+            string: "Password",
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor.lightGray]
+        )
         return tf
     }()
 
@@ -63,10 +69,19 @@ class LoginViewController: UIViewController {
         return btn
     }()
 
+    private lazy var loadingIndicator: UIActivityIndicatorView = {
+        let ind = UIActivityIndicatorView(style: .medium)
+        ind.translatesAutoresizingMaskIntoConstraints = false
+        ind.color = .white
+        ind.hidesWhenStopped = true
+        return ind
+    }()
+
     // MARK: - Properties
 
     private var subscribers: Set<AnyCancellable> = []
     private var loginButtonBottomConstraint: NSLayoutConstraint?
+    private let feedbackGenerator = UIImpactFeedbackGenerator(style: .soft)
 
     struct Constants {
         static let LoginButtonBottomSpacing: CGFloat = 20
@@ -81,6 +96,7 @@ class LoginViewController: UIViewController {
         setupUI()
         setupSubscribers()
         addKeyboardObservers()
+        feedbackGenerator.prepare()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -100,6 +116,7 @@ class LoginViewController: UIViewController {
         view.addSubview(usernameTextField)
         view.addSubview(passwordTextField)
         view.addSubview(loginButton)
+        view.addSubview(loadingIndicator)
 
         NSLayoutConstraint.activate([
             logoImv.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -134,6 +151,11 @@ class LoginViewController: UIViewController {
         ])
         loginButtonBottomConstraint = loginButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20)
         loginButtonBottomConstraint?.isActive = true
+
+        NSLayoutConstraint.activate([
+            loadingIndicator.centerXAnchor.constraint(equalTo: loginButton.centerXAnchor),
+            loadingIndicator.centerYAnchor.constraint(equalTo: loginButton.centerYAnchor)
+        ])
     }
 
     private func setupSubscribers() {
@@ -175,21 +197,40 @@ class LoginViewController: UIViewController {
         passwordTextField.resignFirstResponder()
     }
 
+    private func startLoading() {
+        loadingIndicator.startAnimating()
+        loginButton.setTitle("", for: .normal)
+        loginButton.isUserInteractionEnabled = false
+    }
+
+    private func stopLoading() {
+        loadingIndicator.stopAnimating()
+        loginButton.setTitle("Continue", for: .normal)
+        loginButton.isUserInteractionEnabled = true
+    }
+
     @objc private func loginPressed() {
         // qe - testing automatically login
-//        Server.shared.login(username: "john", password: "12345", completion: { [weak self] success, error in
-//            DispatchQueue.main.async {
-//                if success {
-//                    self?.enterApp()
-//                }
-//            }
-//        })
-//        return
+
+        feedbackGenerator.impactOccurred()
+        startLoading()
+
+        Server.shared.login(username: "john", password: "12345", completion: { [weak self] success, error in
+            DispatchQueue.main.async {
+                self?.stopLoading()
+                if success {
+                    self?.enterApp()
+                }
+            }
+        })
+        return
 
         guard let username = usernameTextField.text, let password = passwordTextField.text else { return }
         Server.shared.login(username: username, password: password, completion: { [weak self] success, error in
             DispatchQueue.main.async {
+                self?.stopLoading()
                 if success {
+                    self?.feedbackGenerator.impactOccurred()
                     self?.enterApp()
                 } else {
                     // Display error
