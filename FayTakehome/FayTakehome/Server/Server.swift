@@ -152,7 +152,7 @@ struct Appointment: Decodable, Hashable {
     public var timeRangeString: String {
         let startTime = Appointment.dateFormatter.string(from: start)
         let endTime = Appointment.dateFormatter.string(from: end)
-        return startTime + " - " + endTime
+        return startTime + " - " + endTime + " (PT)"
     }
 
     static let dateFormatter: DateFormatter = {
