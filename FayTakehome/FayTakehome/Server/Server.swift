@@ -30,7 +30,7 @@ class Server {
 
     /// completion returns Bool representing login success
     /// completion returns Error? based on result of login request. nil when login succeeds
-    public func login(username: String, password: String, completion: @escaping (Bool, Error?) -> ()) {
+    public func login(username: String, password: String, completion: @escaping (Bool, FayServerError?) -> ()) {
         guard let postUrl = URL(string: baseURLString + signInExtension) else {
             completion(false, FayServerError.invalidUrl)
             return
@@ -72,7 +72,7 @@ class Server {
         task.resume()
     }
 
-    public func fetchAppointments(completion: @escaping ([Appointment], Error?) -> ()) {
+    public func fetchAppointments(completion: @escaping ([Appointment], FayServerError?) -> ()) {
         guard let loginToken = loginToken else {
             completion([], FayServerError.notLoggedIn)
             return

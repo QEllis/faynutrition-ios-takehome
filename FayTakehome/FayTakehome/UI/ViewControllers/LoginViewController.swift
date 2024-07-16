@@ -28,6 +28,17 @@ class LoginViewController: UIViewController {
         return label
     }()
 
+    private lazy var errorLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
+        label.textColor = .systemRed
+        label.text = ""
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        return label
+    }()
+
     private lazy var usernameTextField: UITextField = {
         let tf = UITextField()
         tf.translatesAutoresizingMaskIntoConstraints = false
@@ -115,15 +126,18 @@ class LoginViewController: UIViewController {
         view.addSubview(titleLabel)
         view.addSubview(usernameTextField)
         view.addSubview(passwordTextField)
+        view.addSubview(errorLabel)
         view.addSubview(loginButton)
         view.addSubview(loadingIndicator)
 
         NSLayoutConstraint.activate([
             logoImv.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            logoImv.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 48),
             logoImv.heightAnchor.constraint(equalToConstant: 64),
             logoImv.widthAnchor.constraint(equalTo: logoImv.heightAnchor, multiplier: 2.87)
         ])
+        let logoTopAnchor = logoImv.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 48)
+        logoTopAnchor.priority = .defaultLow
+        logoTopAnchor.isActive = true
 
         NSLayoutConstraint.activate([
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 36),
@@ -145,6 +159,13 @@ class LoginViewController: UIViewController {
         ])
 
         NSLayoutConstraint.activate([
+            errorLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            errorLabel.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 8),
+            errorLabel.bottomAnchor.constraint(lessThanOrEqualTo: loginButton.topAnchor, constant: -16),
+            errorLabel.heightAnchor.constraint(equalToConstant: 24)
+        ])
+
+        NSLayoutConstraint.activate([
             loginButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             loginButton.heightAnchor.constraint(equalToConstant: 48),
             loginButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20)
@@ -163,7 +184,7 @@ class LoginViewController: UIViewController {
         usernameTextField.textPublisher()
             .combineLatest(passwordTextField.textPublisher())
             .map({ usernameText, passwordText in
-                return usernameText.isEmpty || passwordText.isEmpty
+                return (usernameText.isEmpty || passwordText.isEmpty) || (passwordText == "" || usernameText == "")
             })
             .sink(receiveValue: { [weak self] usernameOrPasswordEmpty in
                 self?.loginButton.isUserInteractionEnabled = !usernameOrPasswordEmpty
@@ -210,21 +231,6 @@ class LoginViewController: UIViewController {
     }
 
     @objc private func loginPressed() {
-        // qe - testing automatically login
-
-        feedbackGenerator.impactOccurred()
-        startLoading()
-
-        Server.shared.login(username: "john", password: "12345", completion: { [weak self] success, error in
-            DispatchQueue.main.async {
-                self?.stopLoading()
-                if success {
-                    self?.enterApp()
-                }
-            }
-        })
-        return
-
         guard let username = usernameTextField.text, let password = passwordTextField.text else { return }
         Server.shared.login(username: username, password: password, completion: { [weak self] success, error in
             DispatchQueue.main.async {
@@ -234,6 +240,12 @@ class LoginViewController: UIViewController {
                     self?.enterApp()
                 } else {
                     // Display error
+                    self?.errorLabel.text = error?.description
+                    self?.usernameTextField.text = ""
+                    self?.passwordTextField.text = ""
+                    self?.usernameTextField.becomeFirstResponder()
+                    self?.loginButton.alpha = 0.5
+                    self?.loginButton.isUserInteractionEnabled = false
                 }
             }
         })
@@ -241,8 +253,8 @@ class LoginViewController: UIViewController {
 
     private func enterApp() {
         let vc = AppointmentsViewController()
-        UIApplication.shared.windows.first?.rootViewController = vc
-        UIApplication.shared.windows.first?.makeKeyAndVisible()
+        AppDelegate.keyWindow?.rootViewController = vc
+        AppDelegate.keyWindow?.makeKeyAndVisible()
     }
 
 }

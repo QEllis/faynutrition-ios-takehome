@@ -201,12 +201,6 @@ final class AppointmentsViewController: UIViewController {
     private func cellProvider(collectionView: UICollectionView, indexPath: IndexPath, appointmentData: AppointmentCellData) -> UICollectionViewCell? {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AppointmentCell.defaultReuseIdentifier, for: indexPath) as? AppointmentCell else { return nil }
         cell.fillOut(with: appointmentData.appointment, isSelected: appointmentData.isSelected)
-
-        /// Selection publisher. Update `isSelected` based on self.selectedAppointment. Store subscriber on cell which handles own release.
-//        $selectedAppointment.removeDuplicates().sink(receiveValue: { selected in
-//            cell.appointmentSelected = selected == appointment
-//        }).store(in: &cell.subscribers)
-
         return cell
     }
 
