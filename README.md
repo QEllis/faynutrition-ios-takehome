@@ -8,7 +8,10 @@
 
 
 ## Usage Video
-https://github.com/user-attachments/assets/9260bf41-7c00-47ce-b419-41bc0c5426ad
+
+https://github.com/user-attachments/assets/b0761700-d6ea-4a20-9ed6-06936b435ce6
+
+
 
 ## Screenshots
 
